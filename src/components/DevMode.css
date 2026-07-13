@@ -1,0 +1,101 @@
+.devmode {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(3, 2, 9, 0.94);
+  backdrop-filter: blur(6px);
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.devmode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--signal);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+}
+
+.devmode-header button {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.7rem;
+}
+
+.devmode-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.devmode-panel {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px;
+  background: var(--panel);
+}
+
+.devmode-panel-wide {
+  grid-column: 1 / -1;
+}
+
+.devmode-panel-title {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  margin-bottom: 12px;
+}
+
+.devmode-gauge {
+  height: 10px;
+  border-radius: 6px;
+  background: rgba(139, 92, 246, 0.1);
+  overflow: hidden;
+}
+.devmode-gauge-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple), var(--signal));
+  transition: width 0.4s ease;
+}
+.devmode-gauge-val {
+  margin-top: 8px;
+  font-size: 1.2rem;
+  color: var(--confidence);
+}
+
+.devmode-mem {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 4px;
+}
+.devmode-mem span {
+  aspect-ratio: 1;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 2px;
+}
+.devmode-mem span.on {
+  background: var(--signal);
+  box-shadow: 0 0 6px var(--signal-dim);
+}
+
+.devmode-logs {
+  font-size: 0.74rem;
+  line-height: 1.9;
+  color: var(--text-dim);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+@media (max-width: 700px) {
+  .devmode-grid { grid-template-columns: 1fr; }
+}

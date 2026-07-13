@@ -1,0 +1,118 @@
+.about {
+  padding-top: 40px; /* pull closer to hero */
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  margin-top: 40px;
+  align-items: start;
+}
+
+.spec-card {
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 22px 24px;
+}
+
+.spec-card-head {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.spec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--confidence);
+  box-shadow: 0 0 8px var(--confidence);
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px dashed rgba(139, 92, 246, 0.1);
+  font-size: 0.8rem;
+}
+.spec-row:last-child { border-bottom: none; }
+
+.spec-row dt {
+  color: var(--text-faint);
+}
+.spec-row dd {
+  margin: 0;
+  color: var(--text);
+  text-align: right;
+  font-weight: 500;
+}
+
+.terminal {
+  background: #06050c;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
+
+.terminal-title {
+  margin-left: 8px;
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+
+.terminal-body {
+  padding: 18px 20px;
+  font-size: 0.8rem;
+  line-height: 1.75;
+  flex: 1;
+}
+
+.term-cmd {
+  color: var(--signal);
+  margin-top: 6px;
+}
+.term-out {
+  color: var(--text-dim);
+}
+
+.term-cursor {
+  color: var(--purple-bright);
+  animation: blink 0.9s steps(1) infinite;
+}
+
+@media (max-width: 860px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+}

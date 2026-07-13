@@ -1,0 +1,208 @@
+.timeline {
+  position: relative;
+  margin-top: 40px;
+  padding-left: 26px;
+}
+
+.timeline-track {
+  position: absolute;
+  left: 5px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--purple), var(--signal), transparent);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.timeline-node {
+  position: absolute;
+  left: -26px;
+  top: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--void);
+  border: 2px solid var(--purple-bright);
+  box-shadow: 0 0 10px var(--signal-dim);
+}
+
+.timeline-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.timeline-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+.timeline-card h3 {
+  margin-top: 8px;
+  font-size: 1.05rem;
+}
+
+.timeline-meta {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.timeline-detail {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--text-dim);
+  max-width: 640px;
+}
+
+.achievements {
+  margin-top: 70px;
+}
+
+.badge-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.badge {
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 16px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.badge:hover {
+  border-color: rgba(168, 141, 255, 0.4);
+}
+
+.badge-icon {
+  font-size: 1.8rem;
+  display: block;
+}
+
+.badge-title {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.badge-desc {
+  margin-top: 6px;
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .badge-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.certs {
+  margin-top: 60px;
+}
+
+.cert-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.cert-card {
+  background: linear-gradient(135deg, var(--panel), rgba(12, 10, 23, 0.6));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 140px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cert-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--purple-bright), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.cert-card:hover::after {
+  transform: translateX(100%);
+}
+
+.cert-card:hover {
+  box-shadow: 0 0 15px rgba(34, 211, 238, 0.15);
+}
+
+.cert-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cert-platform {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.cert-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--confidence);
+  box-shadow: 0 0 8px var(--confidence);
+}
+
+.cert-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 12px 0;
+  line-height: 1.4;
+}
+
+.cert-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed rgba(139, 92, 246, 0.15);
+  padding-top: 10px;
+}
+
+.cert-id {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-faint);
+}
+
+.cert-status-text {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--confidence);
+  letter-spacing: 0.05em;
+}

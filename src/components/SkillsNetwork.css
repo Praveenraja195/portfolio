@@ -1,0 +1,162 @@
+.skills-hint {
+  margin-top: 10px;
+  color: var(--text-faint);
+  font-size: 0.76rem;
+}
+
+.skills-stage {
+  margin-top: 30px;
+  background: radial-gradient(ellipse at center, rgba(76, 29, 149, 0.14), transparent 70%);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px;
+}
+
+.skills-svg {
+  width: 100%;
+  height: 54vh;
+  max-height: 540px;
+  min-height: 340px;
+  display: block;
+}
+
+.skill-edge {
+  stroke: rgba(139, 92, 246, 0.22);
+  stroke-width: 0.25;
+  transition: stroke 0.2s, stroke-width 0.2s;
+}
+.skill-edge.is-active {
+  stroke: var(--signal);
+  stroke-width: 0.5;
+}
+
+.skill-node-group {
+  cursor: pointer;
+  outline: none;
+}
+
+.skill-node {
+  transition: opacity 0.2s, r 0.2s;
+}
+
+.skill-node-group:hover .skill-node,
+.skill-node-group:focus .skill-node {
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+.skill-label {
+  fill: var(--text-dim);
+  font-size: 2.6px;
+  font-family: var(--font-mono);
+  pointer-events: none;
+}
+
+.skill-icon-text {
+  fill: #fff;
+  font-family: var(--font-display);
+  pointer-events: none;
+  filter: drop-shadow(0 0 1px rgba(0,0,0,0.5));
+}
+
+
+.hub-icon {
+  filter: drop-shadow(0 0 3px rgba(139, 92, 246, 0.6));
+}
+
+.hub-label {
+  fill: var(--text-faint);
+  font-size: 2.8px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.15em;
+}
+
+/* Floating animation keyframes */
+@keyframes skillFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.2px); }
+}
+
+.skill-float {
+  animation: skillFloat 3s ease-in-out infinite;
+}
+
+.skill-float-0 { animation-duration: 3s; animation-delay: 0s; }
+.skill-float-1 { animation-duration: 3.4s; animation-delay: 0.6s; }
+.skill-float-2 { animation-duration: 2.8s; animation-delay: 1.2s; }
+.skill-float-3 { animation-duration: 3.6s; animation-delay: 0.3s; }
+.skill-float-4 { animation-duration: 3.2s; animation-delay: 0.9s; }
+
+.center-hub {
+  pointer-events: none;
+  animation: skillFloat 4s ease-in-out infinite;
+}
+
+.skill-inspector {
+  margin-top: 22px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px 22px;
+  min-height: 120px;
+}
+
+.inspector-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.inspector-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  padding: 6px 0;
+  color: var(--text-dim);
+  border-bottom: 1px dashed rgba(139, 92, 246, 0.1);
+  gap: 20px;
+}
+.inspector-row span:last-child {
+  color: var(--text);
+  text-align: right;
+}
+
+.status-tag {
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.status-tag.production { background: rgba(52, 226, 160, 0.12); color: var(--confidence); }
+.status-tag.training { background: rgba(240, 169, 78, 0.14); color: var(--warn); }
+
+.inspector-conf {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 0.76rem;
+  color: var(--text-dim);
+}
+.conf-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 4px;
+  background: rgba(139, 92, 246, 0.1);
+  overflow: hidden;
+}
+.conf-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple), var(--signal));
+}
+
+.inspector-empty {
+  color: var(--text-faint);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .skill-label { font-size: 3.4px; }
+  .skills-svg { height: 60vh; }
+}

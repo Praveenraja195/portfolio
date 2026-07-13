@@ -1,0 +1,12 @@
+.neural-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(76, 29, 149, 0.28), transparent 55%),
+    radial-gradient(ellipse at 85% 80%, rgba(14, 22, 66, 0.55), transparent 60%),
+    var(--void);
+  pointer-events: none;
+}

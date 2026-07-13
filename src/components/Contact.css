@@ -1,0 +1,85 @@
+.contact-terminal {
+  margin-top: 30px;
+  background: #06050c;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: text;
+}
+
+.contact-body {
+  padding: 18px 20px;
+  font-size: 0.82rem;
+  line-height: 1.8;
+  min-height: 220px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.contact-inputline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.contact-inputline input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  outline: none;
+}
+
+.contact-card {
+  margin: 10px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.contact-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.78rem;
+  transition: background 0.2s;
+}
+.contact-row:last-child { border-bottom: none; }
+.contact-row:hover { background: rgba(139, 92, 246, 0.08); }
+
+.contact-label {
+  color: var(--text-faint);
+}
+.contact-value {
+  color: var(--signal);
+}
+
+.contact-download .contact-value {
+  color: var(--confidence);
+}
+
+.contact-quick {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px 16px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.contact-quick button {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+.contact-quick button:hover {
+  color: var(--signal);
+  border-color: var(--signal-dim);
+}
