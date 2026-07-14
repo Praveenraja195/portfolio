@@ -87,6 +87,9 @@ export default function Hero() {
             <a className="btn-primary" href="#projects" onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({behavior:'smooth'}) }}>
               deploy models → view projects
             </a>
+            <a className="btn-ghost" href="/Praveenraja_S_Resume.pdf" download>
+              download resume ↓
+            </a>
             <a className="btn-ghost" href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({behavior:'smooth'}) }}>
               initialize contact
             </a>

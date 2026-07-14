@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import './Experience.css'
 
 const STEPS = [
@@ -116,16 +117,18 @@ function Achievements() {
 }
 
 const CERTS = [
-  { platform: 'ServiceNow', name: 'Welcome to ServiceNow', date: '2025', id: 'SN-001' },
-  { platform: 'ServiceNow', name: 'Flow Designer (Flows)', date: '2025', id: 'SN-002' },
-  { platform: 'NPTEL', name: 'Introduction to Machine Learning', date: '2024', id: 'NP-301' },
-  { platform: 'Google', name: 'Cybersecurity (via Ingage)', date: '2024', id: 'G-102' },
-  { platform: 'Coursera', name: 'Crash Course on Python', date: '2023', id: 'CO-941' },
-  { platform: 'Anthropic', name: 'Claude 101', date: '2024', id: 'AN-101' },
-  { platform: 'Anthropic', name: 'ClaudeCode 101', date: '2025', id: 'AN-202' },
+  { platform: 'ServiceNow', name: 'Welcome to ServiceNow', date: '2025', id: 'SN-001', image: '/certificates/welcome-to-servicenow.png' },
+  { platform: 'ServiceNow', name: 'Flow Designer (Flows)', date: '2025', id: 'SN-002', image: '/certificates/flow-designer.png' },
+  { platform: 'NPTEL', name: 'Introduction to Machine Learning', date: '2024', id: 'NP-301', image: '/certificates/machine-learning.png' },
+  { platform: 'Google', name: 'Cybersecurity (via Ingage)', date: '2024', id: 'G-102', image: '/certificates/cybersecurity.png' },
+  { platform: 'Coursera', name: 'Crash Course on Python', date: '2023', id: 'CO-941', image: '/certificates/crash-course-python.png' },
+  { platform: 'Anthropic', name: 'Claude 101', date: '2024', id: 'AN-101', image: '/certificates/claude-101.png' },
+  { platform: 'Anthropic', name: 'ClaudeCode 101', date: '2025', id: 'AN-202', image: '/certificates/claudecode-101.png' },
 ]
 
 function Certifications() {
+  const [activeCert, setActiveCert] = useState(null)
+
   return (
     <div className="certs">
       <p className="eyebrow">SAVED LOGS // CERTIFICATIONS</p>
@@ -139,6 +142,7 @@ function Certifications() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.08 }}
             whileHover={{ y: -4, borderColor: 'var(--signal)' }}
+            onClick={() => setActiveCert(c)}
           >
             <div className="cert-card-header">
               <span className="cert-platform">{c.platform}</span>
@@ -152,6 +156,63 @@ function Certifications() {
           </motion.div>
         ))}
       </div>
+
+      <AnimatePresence>
+        {activeCert && (
+          <motion.div
+            className="cert-lightbox-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveCert(null)}
+          >
+            <motion.div
+              className="cert-lightbox-content"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="cert-lightbox-close"
+                onClick={() => setActiveCert(null)}
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+              <div className="cert-lightbox-header">
+                <span className="cert-lightbox-platform">{activeCert.platform}</span>
+                <span className="cert-lightbox-id">{activeCert.id}</span>
+              </div>
+              <h3 className="cert-lightbox-title">{activeCert.name}</h3>
+              <div className="cert-lightbox-image-wrap">
+                <img
+                  src={activeCert.image}
+                  alt={`${activeCert.name} Certificate`}
+                  className="cert-lightbox-image"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.style.display = 'none';
+                    e.target.parentNode.innerHTML = `
+                      <div class="cert-placeholder-fallback">
+                        <div class="fallback-icon">📄</div>
+                        <p class="fallback-text">Certificate image file not found.</p>
+                        <code class="fallback-path">${activeCert.image}</code>
+                        <p class="fallback-hint">Please place your certificate image at this path to display it here.</p>
+                      </div>
+                    `;
+                  }}
+                />
+              </div>
+              <div className="cert-lightbox-footer">
+                <span>Issue Date: {activeCert.date}</span>
+                <span className="cert-lightbox-status">Status: Verified ✓</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

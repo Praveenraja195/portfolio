@@ -8,7 +8,7 @@ const CONTACT_INFO = [
   { key: 'github', label: 'GitHub', value: 'github.com/Praveenraja195', href: 'https://github.com/Praveenraja195' },
 ]
 
-const HELP_TEXT = 'available commands: contact · skills · projects · about · timeline · certs · intern · clear'
+const HELP_TEXT = 'available commands: contact · skills · projects · about · timeline · certs · intern · message · clear'
 
 const SKILLS_OUTPUT = [
   'Initializing weights inspection...',
@@ -82,11 +82,17 @@ const INTERN_OUTPUT = [
   '  - Assessed behavioral logic & in-session guidance',
 ]
 
+const FORMSPREE_FORM_ID = 'mpqvwazv' // Paste your Formspree Form ID here
+
 export default function Contact() {
   const [history, setHistory] = useState([
     { type: 'out', text: 'AI terminal ready. Type "contact" to retrieve reach-out details, or use "help" for a full checklist.' },
   ])
   const [input, setInput] = useState('')
+  const [formName, setFormName] = useState('')
+  const [formEmail, setFormEmail] = useState('')
+  const [formMessage, setFormMessage] = useState('')
+  const [formStatus, setFormStatus] = useState('idle') // 'idle' | 'sending' | 'success' | 'error'
   const scrollRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -118,6 +124,9 @@ export default function Contact() {
       setHistory([])
       setInput('')
       return
+    } else if (cmd === 'message' || cmd === 'msg' || cmd === 'mail' || cmd === 'send') {
+      next.push({ type: 'out', text: 'Initiating messaging prompt...' })
+      next.push({ type: 'out', text: '>>> Please use the DIRECT MESSAGE UPLINK panel next to this terminal to send an instant message directly to my inbox.' })
     } else if (cmd === '') {
       // no-op
     } else {
@@ -127,39 +136,146 @@ export default function Contact() {
     setInput('')
   }
 
+  const handleFormSubmit = async (e) => {
+    e.preventDefault()
+    if (!formName.trim() || !formEmail.trim() || !formMessage.trim()) return
+
+    setFormStatus('sending')
+    try {
+      const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formName,
+          email: formEmail,
+          message: formMessage
+        })
+      })
+
+      if (response.ok) {
+        setFormStatus('success')
+        setFormName('')
+        setFormEmail('')
+        setFormMessage('')
+      } else {
+        setFormStatus('error')
+      }
+    } catch (error) {
+      console.error('Error transmitting message:', error)
+      setFormStatus('error')
+    }
+  }
+
   return (
     <section id="contact" className="contact section-wrap">
-      <p className="eyebrow">CONTACT // TERMINAL</p>
+      <p className="eyebrow">CONTACT // DIRECT TRANSMISSION</p>
       <h2 className="section-title">Open a <span>Connection</span></h2>
-      <p className="skills-hint">Type <code>contact</code>, <code>skills</code>, <code>certs</code>, or <code>intern</code> below, or tap a quick command.</p>
+      <p className="skills-hint">Type terminal commands or fill out the direct uplink form to contact me directly.</p>
 
-      <div className="contact-terminal" onClick={() => inputRef.current?.focus()}>
-        <div className="terminal-bar">
-          <span className="dot red" /><span className="dot yellow" /><span className="dot green" />
-          <span className="terminal-title">connection.sh</span>
-        </div>
-        <div className="contact-body" ref={scrollRef}>
-          {history.map((h, i) => (
-            <ContactLine key={i} item={h} />
-          ))}
-          <div className="contact-inputline">
-            <span className="term-cmd">&gt;</span>
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') runCommand(input) }}
-              placeholder="type a command..."
-              aria-label="Terminal command input"
-              autoComplete="off"
-              spellCheck="false"
-            />
+      <div className="contact-grid">
+        <div className="contact-terminal-wrap">
+          <div className="contact-terminal" onClick={() => inputRef.current?.focus()}>
+            <div className="terminal-bar">
+              <span className="dot red" /><span className="dot yellow" /><span className="dot green" />
+              <span className="terminal-title">connection.sh</span>
+            </div>
+            <div className="contact-body" ref={scrollRef}>
+              {history.map((h, i) => (
+                <ContactLine key={i} item={h} />
+              ))}
+              <div className="contact-inputline">
+                <span className="term-cmd">&gt;</span>
+                <input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') runCommand(input) }}
+                  placeholder="type a command..."
+                  aria-label="Terminal command input"
+                  autoComplete="off"
+                  spellCheck="false"
+                />
+              </div>
+            </div>
+            <div className="contact-quick">
+              {['contact', 'skills', 'projects', 'certs', 'intern', 'about', 'timeline', 'clear'].map((c) => (
+                <button key={c} onClick={() => runCommand(c)}>{c}</button>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="contact-quick">
-          {['contact', 'skills', 'projects', 'certs', 'intern', 'about', 'timeline', 'clear'].map((c) => (
-            <button key={c} onClick={() => runCommand(c)}>{c}</button>
-          ))}
+
+        {/* Direct Email Form Panel */}
+        <div className="contact-form-panel">
+          <div className="terminal-bar">
+            <span className="dot red" /><span className="dot yellow" /><span className="dot green" />
+            <span className="terminal-title">transmit_message.sh</span>
+          </div>
+          <div className="contact-form-body">
+            <p className="form-eyebrow">DIRECT MESSAGE UPLINK</p>
+            {formStatus === 'success' ? (
+              <div className="form-success-state">
+                <span className="success-icon">✓</span>
+                <p className="success-title">TRANSMISSION SECURED</p>
+                <p className="success-desc">Your message has been successfully routed to my inbox. I'll get back to you shortly.</p>
+                <button className="form-reset-btn" onClick={() => setFormStatus('idle')}>
+                  SEND NEW SIGNAL
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleFormSubmit} className="contact-visual-form">
+                <div className="form-group">
+                  <label htmlFor="form-name">SENDER_NAME &gt;</label>
+                  <input
+                    type="text"
+                    id="form-name"
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    placeholder="Enter name"
+                    required
+                    disabled={formStatus === 'sending'}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="form-email">SENDER_EMAIL &gt;</label>
+                  <input
+                    type="email"
+                    id="form-email"
+                    value={formEmail}
+                    onChange={(e) => setFormEmail(e.target.value)}
+                    placeholder="Enter email"
+                    required
+                    disabled={formStatus === 'sending'}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="form-message">TRANSMISSION_DATA &gt;</label>
+                  <textarea
+                    id="form-message"
+                    value={formMessage}
+                    onChange={(e) => setFormMessage(e.target.value)}
+                    placeholder="Type message here..."
+                    required
+                    rows={4}
+                    disabled={formStatus === 'sending'}
+                  />
+                </div>
+                {formStatus === 'error' && (
+                  <p className="form-error-msg">⚠ TRANSMISSION FAILED. Please retry.</p>
+                )}
+                <button
+                  type="submit"
+                  className={`form-submit-btn ${formStatus === 'sending' ? 'sending' : ''}`}
+                  disabled={formStatus === 'sending'}
+                >
+                  {formStatus === 'sending' ? 'TRANSMITTING...' : 'TRANSMIT SIGNAL'}
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </section>
