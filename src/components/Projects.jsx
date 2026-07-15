@@ -40,6 +40,7 @@ const PROJECTS = [
       '/projects/genesis/Screenshot 2026-04-11 120137.png',
       '/projects/genesis/Screenshot 2026-04-11 120147.png',
     ],
+    demo: 'https://expo-vno4.onrender.com/',
   },
   {
     id: 'repair-agent',
@@ -83,6 +84,67 @@ const PROJECTS = [
     images: [
       '/projects/pii-detector/Screenshot 2026-07-09 145249 - Copy.png',
       '/projects/pii-detector/Screenshot 2026-07-09 145432.png',
+    ],
+    demo: 'https://pii-detector-lilac.vercel.app/',
+  },
+  {
+    id: 'movie-recommender',
+    name: 'AI Movie Recommender',
+    subtitle: 'RandomForest Prediction & OMDb API Matrix',
+    checkpoint: 'movie-recommender.ckpt',
+    description:
+      'A full-stack movie recommendation web app using a RandomForestRegressor to predict movie relevance based on genre and IMDb ratings, with real-time poster and metadata retrieval integrated via the OMDb API.',
+    achievement: '🎬 Smart IMDb predictions + real-time movie card rendering',
+    metrics: [
+      { label: 'Regression Model', value: 'RandomForest' },
+      { label: 'Data Retrieval', value: 'OMDb API' },
+      { label: 'Stack Architecture', value: 'Flask / HTML5' },
+    ],
+    tech: ['Python', 'Flask', 'pandas', 'scikit-learn', 'requests'],
+    github: 'https://github.com/NM-Final-Project-GCEE/Batch-07',
+    images: [
+      '/projects/movie-recommender/screenshot1.png',
+      '/projects/movie-recommender/screenshot2.png',
+    ],
+  },
+  {
+    id: 'meet-automation',
+    name: 'Google Meet Automation',
+    subtitle: 'Autonomous Session & Privacy Controller',
+    checkpoint: 'meet-automation.ckpt',
+    description:
+      'A userscript that automates joining Google Meet sessions while securing microphone and camera settings beforehand. Leverages MutationObservers to monitor real-time DOM states, trigger actions, and reset automation on leave events.',
+    achievement: '🔒 Zero-click privacy & state-based meeting automation',
+    metrics: [
+      { label: 'Platform support', value: 'Google Meet' },
+      { label: 'DOM tracking', value: 'MutationObserver' },
+      { label: 'Integration', value: 'Tampermonkey' },
+    ],
+    tech: ['JavaScript', 'Tampermonkey', 'DOM MutationObserver'],
+    github: 'https://github.com/Praveenraja195/meet-automation',
+    images: [
+      '/projects/meet-automation/screenshot1.png',
+      '/projects/meet-automation/screenshot2.png',
+    ],
+  },
+  {
+    id: 'face-attendance',
+    name: 'Face Recognition Attendance',
+    subtitle: 'Biometric Registration & Live Logging',
+    checkpoint: 'face-attendance.ckpt',
+    description:
+      'A web interface combining Python, Flask, OpenCV, and the face_recognition library to stream frames, identify human subjects against a pre-registered image catalog, and log timestamps automatically to a CSV index.',
+    achievement: '👤 Live face-matching pipeline + CSV attendance automation',
+    metrics: [
+      { label: 'Capture & Vision', value: 'OpenCV' },
+      { label: 'Face Matching', value: 'face_recognition' },
+      { label: 'Storage format', value: 'CSV Matrix' },
+    ],
+    tech: ['Python', 'Flask', 'OpenCV', 'face_recognition', 'CSV'],
+    github: 'https://github.com/Praveenraja195/Face-Recognition-Attendance',
+    images: [
+      '/projects/face-attendance/screenshot1.png',
+      '/projects/face-attendance/screenshot2.png',
     ],
   },
 ]
@@ -156,7 +218,13 @@ function ProjectCard({ project, open, onToggle }) {
                 <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn-primary sm">
                   view on GitHub ↗
                 </a>
-                <span className="btn-ghost sm disabled">live demo // offline</span>
+                {project.demo ? (
+                  <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn-ghost sm">
+                    live demo ↗
+                  </a>
+                ) : (
+                  <span className="btn-ghost sm disabled">live demo // offline</span>
+                )}
               </div>
             </div>
           </motion.div>
@@ -214,6 +282,9 @@ function ArchDiagram({ tech }) {
     'Flask': '⚗️', 'Groq API': '🔮', 'Gemini API': '✦', 'n8n': '🔄',
     'PostgreSQL': '🐘', 'Chart.js': '📊', 'Python': '🐍', 'Claude API': '🧠',
     'GitHub Actions': '⚙️', 'SQL': '💾', 'Roboflow API': '📷', 'OpenCV': '👁️',
+    'pandas': '🐼', 'scikit-learn': '🤖', 'requests': '🌐',
+    'JavaScript': 'JS', 'Tampermonkey': '🐒', 'DOM MutationObserver': '👁️',
+    'face_recognition': '👤', 'CSV': '📄',
   }
 
   return (

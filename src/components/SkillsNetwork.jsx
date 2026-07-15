@@ -5,17 +5,17 @@ import './SkillsNetwork.css'
 // Each skill is a node positioned within a 0-100 viewBox, clustered loosely
 // by domain so the graph reads as three lobes: ML/AI, Web/Backend, Infra.
 const SKILLS = [
-  { id: 'python', name: 'Python', x: 32, y: 42, r: 5.5, cluster: 'core', years: '3+ yrs', confidence: 97, projects: 'Genesis, Repair Agent, PII Detector', status: 'production' },
-  { id: 'ml', name: 'Machine Learning', x: 22, y: 22, r: 5.5, cluster: 'ml', years: '2 yrs', confidence: 92, projects: 'Genesis clustering, PII detection', status: 'production' },
+  { id: 'python', name: 'Python', x: 32, y: 42, r: 5.5, cluster: 'core', years: '3+ yrs', confidence: 97, projects: 'Genesis, Repair Agent, PII Detector, Movie Recommender, Face Recognition Attendance', status: 'production' },
+  { id: 'ml', name: 'Machine Learning', x: 22, y: 22, r: 5.5, cluster: 'ml', years: '2 yrs', confidence: 92, projects: 'Genesis clustering, PII detection, Movie relevance prediction', status: 'production' },
   { id: 'llm', name: 'LLMs', x: 10, y: 42, r: 5, cluster: 'ml', years: '1.5 yrs', confidence: 90, projects: 'Sapiency AI, Repair Agent', status: 'production' },
   { id: 'rag', name: 'RAG', x: 10, y: 64, r: 5, cluster: 'ml', years: '1 yr', confidence: 82, projects: 'Knowledge retrieval experiments', status: 'training' },
-  { id: 'opencv', name: 'OpenCV', x: 22, y: 80, r: 5, cluster: 'ml', years: '1 yr', confidence: 85, projects: 'PII Detector redaction engine', status: 'production' },
+  { id: 'opencv', name: 'OpenCV', x: 22, y: 80, r: 5, cluster: 'ml', years: '1 yr', confidence: 85, projects: 'PII Detector redaction engine, Face Recognition Attendance', status: 'production' },
   { id: 'groq', name: 'Groq API', x: 36, y: 10, r: 4.5, cluster: 'ml', years: '1 yr', confidence: 88, projects: 'Genesis analytics engine', status: 'production' },
   { id: 'gemini', name: 'Gemini API', x: 62, y: 10, r: 4.5, cluster: 'ml', years: '1 yr', confidence: 86, projects: 'Genesis analytics engine', status: 'production' },
   { id: 'claude-api', name: 'Claude API', x: 78, y: 20, r: 5, cluster: 'ml', years: '0.5 yr', confidence: 84, projects: 'Autonomous Repair Agent', status: 'production' },
-  { id: 'flask', name: 'Flask', x: 72, y: 40, r: 5, cluster: 'web', years: '2 yrs', confidence: 93, projects: 'Genesis, PII Detector', status: 'production' },
+  { id: 'flask', name: 'Flask', x: 72, y: 40, r: 5, cluster: 'web', years: '2 yrs', confidence: 93, projects: 'Genesis, PII Detector, Movie Recommender, Face Recognition Attendance', status: 'production' },
   { id: 'fastapi', name: 'FastAPI', x: 88, y: 32, r: 4.5, cluster: 'web', years: '0.5 yr', confidence: 74, projects: 'Internal API prototypes', status: 'training' },
-  { id: 'js', name: 'JavaScript', x: 86, y: 56, r: 5, cluster: 'web', years: '2 yrs', confidence: 88, projects: 'Genesis frontend, dashboards', status: 'production' },
+  { id: 'js', name: 'JavaScript', x: 86, y: 56, r: 5, cluster: 'web', years: '2 yrs', confidence: 88, projects: 'Genesis frontend, dashboards, Meet Automation', status: 'production' },
   { id: 'postgres', name: 'PostgreSQL', x: 68, y: 64, r: 5, cluster: 'web', years: '1.5 yrs', confidence: 87, projects: 'Genesis messaging matrix', status: 'production' },
   { id: 'mongo', name: 'MongoDB', x: 82, y: 74, r: 4.5, cluster: 'web', years: '1 yr', confidence: 80, projects: 'Genesis Atlas storage', status: 'production' },
   { id: 'sqlalchemy', name: 'SQLAlchemy', x: 60, y: 82, r: 4.5, cluster: 'web', years: '1 yr', confidence: 82, projects: 'Repair Agent query layer', status: 'production' },

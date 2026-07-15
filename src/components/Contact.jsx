@@ -32,6 +32,12 @@ const PROJECTS_OUTPUT = [
   '  ↳ Claude 3.5 Haiku + self-healing debugger (0.8s exec)',
   '• [pii-detector.ckpt] - PII Detector',
   '  ↳ Roboflow object detection model + OpenCV mask (SIH selected)',
+  '• [movie-recommender.ckpt] - AI Movie Recommender',
+  '  ↳ RandomForest predictions + real-time OMDb API posters',
+  '• [meet-automation.ckpt] - Google Meet Automation',
+  '  ↳ Auto-join privacy script + DOM MutationObserver state tracking',
+  '• [face-attendance.ckpt] - Face Recognition Attendance',
+  '  ↳ Webcam face recognition + Flask & OpenCV real-time CSV logging',
 ]
 
 const ABOUT_OUTPUT = [

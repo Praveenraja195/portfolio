@@ -105,11 +105,11 @@ export default function Hero() {
         transition={{ delay: 0.4 }}
       >
         <Stat value="99%" label="model accuracy" />
-        <Stat value="3" label="deployed systems" />
+        <Stat value="6" label="deployed systems" />
         <Stat value="1st" label="AGENTVERSE place" />
         <Stat value="8.92" label="cgpa / 10" />
         <Stat value="500M+" label="parameters tuned" />
-        <Stat value="15+" label="projects built" />
+        <Stat value="7+" label="projects built" />
         <Stat value="24/7" label="agentic uptime" />
         <Stat value="O(1)" label="problem solving" />
       </motion.div>

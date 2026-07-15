@@ -5,7 +5,7 @@ import './BootSequence.css'
 const LOG_LINES = [
   { text: 'initializing neural core...', ms: 380 },
   { text: 'mounting vector database [knowledge.idx]', ms: 420 },
-  { text: 'embedding 4 years of coursework + 3 shipped systems', ms: 520 },
+  { text: 'embedding 4 years of coursework + 6 shipped systems', ms: 520 },
   { text: 'loading weights: praveenraja-v2.ckpt (2.3B params)', ms: 460 },
   { text: 'connecting agents: reva, ada, genesis-core', ms: 380 },
   { text: 'running inference on candidate profile...', ms: 500 },
