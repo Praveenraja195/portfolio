@@ -97,7 +97,7 @@ export default function SkillsNetwork() {
       <p className="skills-hint">Hover or tap a node to inspect it.</p>
 
       <div className="skills-stage">
-        <svg viewBox="0 0 100 100" className="skills-svg" role="img" aria-label="Skills neural network">
+        <svg viewBox="-6 -6 112 112" className="skills-svg" role="img" aria-label="Skills neural network">
           {/* Edges from center hub to each skill */}
           {SKILLS.map((s) => (
             <line

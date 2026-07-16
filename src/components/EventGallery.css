@@ -1,0 +1,497 @@
+.gallery-section {
+  margin-top: 80px;
+  position: relative;
+  width: 100%;
+}
+
+.gallery-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+/* Cover Flow Slider Layout */
+.carousel-outer-container {
+  position: relative;
+  width: 100%;
+  margin-top: 40px;
+  padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  perspective: 1200px; /* Crucial for 3D rotation */
+  overflow: hidden;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 290px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+}
+
+/* Card Wrapper with 3D Positioning */
+.gallery-card-wrapper {
+  position: absolute;
+  width: 360px;
+  height: 240px; /* 3:2 aspect ratio */
+  transform-style: preserve-3d;
+  cursor: pointer;
+  backface-visibility: hidden;
+}
+
+.gallery-card-wrapper.active {
+  cursor: default;
+}
+
+/* The actual Card styling */
+.gallery-card {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* HUD Cyberpunk Corners */
+.card-hud-frame {
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.hud-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--signal);
+  border-style: solid;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.3s, border-color 0.3s;
+  z-index: 5;
+}
+
+.hud-corner.tl { top: 4px; left: 4px; border-width: 2px 0 0 2px; }
+.hud-corner.tr { top: 4px; right: 4px; border-width: 2px 2px 0 0; }
+.hud-corner.bl { bottom: 4px; left: 4px; border-width: 0 0 2px 2px; }
+.hud-corner.br { bottom: 4px; right: 4px; border-width: 0 2px 2px 0; }
+
+.gallery-card:hover .hud-corner {
+  opacity: 1;
+  border-color: var(--purple-bright);
+}
+
+.active .gallery-card:hover {
+  border-color: var(--signal);
+  box-shadow: 0 0 20px var(--signal-dim);
+}
+
+/* Media wrapper for images */
+.card-media-wrap {
+  width: 100%;
+  height: 100%; /* Image takes full card space */
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(5, 3, 8, 0.85);
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.gallery-card:hover .card-image {
+  transform: scale(1.04);
+}
+
+/* Holographic Fallback for Missing Images */
+.card-image-fallback {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.holo-grid-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+  background-size: 15px 15px;
+  animation: grid-scroll 20s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes grid-scroll {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-30px, -30px); }
+}
+
+.fallback-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  z-index: 2;
+}
+
+.fallback-icon {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  animation: pulse-glow-light 1.8s ease-in-out infinite;
+}
+
+.fallback-status {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--signal);
+  background: rgba(34, 211, 238, 0.08);
+  border: 1px solid var(--signal-dim);
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.fallback-filename {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  opacity: 0.8;
+  word-break: break-all;
+}
+
+/* Card Scanlines overlay */
+.card-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.2) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.4;
+}
+
+.card-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, transparent 60%, rgba(5, 3, 8, 0.7) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Click Overlay Hint on Active Slide */
+.card-click-hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 3, 8, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 4;
+}
+
+.active .gallery-card:hover .card-click-hint {
+  opacity: 1;
+}
+
+.card-click-hint span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--signal);
+  border: 1px solid var(--signal-dim);
+  padding: 6px 14px;
+  background: rgba(34, 211, 238, 0.04);
+  border-radius: 4px;
+}
+
+/* Slide Navigation Arrows */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(12, 10, 23, 0.8);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.3s;
+  backdrop-filter: blur(4px);
+}
+
+.nav-btn:hover {
+  color: var(--signal);
+  border-color: var(--signal);
+  box-shadow: 0 0 10px var(--signal-dim);
+  background: var(--panel);
+}
+
+.prev-btn { left: 4%; }
+.next-btn { right: 4%; }
+
+/* Slide indicators */
+.carousel-indicators {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+  z-index: 10;
+}
+
+.indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.indicator-dot.active {
+  background: var(--signal);
+  box-shadow: 0 0 8px var(--signal);
+  transform: scale(1.3);
+}
+
+/* Lightbox Overlay */
+.gallery-lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 3, 8, 0.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+/* Lightbox Frame */
+.gallery-lightbox-content.zoom-only {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+  position: relative;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.7), 
+    0 0 35px rgba(139, 92, 246, 0.15);
+  overflow: hidden;
+}
+
+.gallery-lightbox-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(5, 3, 8, 0.6);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 20;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, transform 0.2s, background-color 0.2s;
+}
+
+.gallery-lightbox-close:hover {
+  color: var(--signal);
+  background-color: rgba(5, 3, 8, 0.9);
+  transform: scale(1.05);
+}
+
+/* HUD Header styling */
+.lightbox-hud-wrap.zoom-only {
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-line-top {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--signal), transparent 70%);
+}
+
+.hud-label-top {
+  position: absolute;
+  top: 4px;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--signal);
+  opacity: 0.7;
+}
+
+/* Single zoom panel styling */
+.lightbox-image-panel.zoom-only {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(5, 3, 8, 0.85);
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox-image-full {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  display: block;
+}
+
+.lightbox-image-fallback {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fallback-large-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  animation: pulse-glow-light 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow-light {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.6; }
+}
+
+.fallback-tip {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 8px;
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+.lightbox-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+  background-size: 100% 3px;
+  pointer-events: none;
+}
+
+/* Responsiveness adjustments */
+@media (max-width: 900px) {
+  .prev-btn { left: 2%; }
+  .next-btn { right: 2%; }
+}
+
+@media (max-width: 768px) {
+  .carousel-track {
+    height: 220px;
+    max-width: 600px;
+  }
+  .gallery-card-wrapper {
+    width: 270px;
+    height: 180px;
+  }
+  .lightbox-image-fallback {
+    min-height: 280px;
+  }
+  .fallback-large-icon {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-track {
+    height: 170px;
+    max-width: 340px;
+  }
+  .gallery-card-wrapper {
+    width: 210px;
+    height: 140px;
+  }
+  .gallery-card-wrapper:not(.active) {
+    opacity: 0.25 !important;
+  }
+  .nav-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+  .prev-btn { left: 1%; }
+  .next-btn { right: 1%; }
+}

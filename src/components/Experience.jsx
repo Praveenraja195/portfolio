@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import EventGallery from './EventGallery.jsx'
 import './Experience.css'
 
 const STEPS = [
@@ -286,6 +287,8 @@ export default function Experience() {
           </motion.div>
         ))}
       </div>
+
+      <EventGallery />
 
       <Achievements />
       <Certifications />
