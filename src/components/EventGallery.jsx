@@ -92,6 +92,7 @@ export default function EventGallery() {
             let zIndexVal = 1
             let opacityVal = 0
             let rotY = 0
+            let zVal = 0 // 3D Z-axis translation
 
             if (offset === 0) {
               xPos = "0%"
@@ -99,30 +100,35 @@ export default function EventGallery() {
               zIndexVal = 10
               opacityVal = 1
               rotY = 0
+              zVal = 60 // Bring active card forward
             } else if (offset === 1) {
-              xPos = "35%"
+              xPos = "44%" // Increase spacing to reduce overlap
               scaleVal = 0.8
               zIndexVal = 5
-              opacityVal = 0.6
-              rotY = -15
+              opacityVal = 0.65
+              rotY = -18
+              zVal = -60 // Push side card back
             } else if (offset === -1) {
-              xPos = "-35%"
+              xPos = "-44%" // Increase spacing to reduce overlap
               scaleVal = 0.8
               zIndexVal = 5
-              opacityVal = 0.6
-              rotY = 15
+              opacityVal = 0.65
+              rotY = 18
+              zVal = -60 // Push side card back
             } else if (offset === 2) {
-              xPos = "65%"
+              xPos = "76%" // Shift far cards further away
               scaleVal = 0.6
               zIndexVal = 2
-              opacityVal = 0.25
-              rotY = -25
+              opacityVal = 0.2
+              rotY = -28
+              zVal = -120 // Push far card deeper back
             } else if (offset === -2) {
-              xPos = "-65%"
+              xPos = "-76%" // Shift far cards further away
               scaleVal = 0.6
               zIndexVal = 2
-              opacityVal = 0.25
-              rotY = 25
+              opacityVal = 0.2
+              rotY = 28
+              zVal = -120 // Push far card deeper back
             }
 
             return (
@@ -135,6 +141,7 @@ export default function EventGallery() {
                   scale: scaleVal,
                   opacity: isVisible ? opacityVal : 0,
                   rotateY: rotY,
+                  z: zVal, // Apply 3D depth translation
                 }}
                 transition={{
                   type: "spring",
