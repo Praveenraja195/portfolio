@@ -158,3 +158,31 @@
   .nav-modules { display: none; }
   .nav-burger { display: flex; }
 }
+
+.nav-sound-btn {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+  padding: 0;
+  user-select: none;
+}
+
+.nav-sound-btn:hover {
+  transform: scale(1.1);
+  border-color: var(--signal);
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.nav-sound-btn.is-active {
+  border-color: var(--signal);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.2);
+}

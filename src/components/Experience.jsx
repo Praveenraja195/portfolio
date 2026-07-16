@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useRef } from 'react'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import './Experience.css'
 
 const STEPS = [
@@ -73,22 +73,17 @@ const STEPS = [
     meta: 'March 2026 · GCE Erode',
     detail: 'Won first place at AGENTVERSE, the departmental hackathon, for Genesis — a role-based AI ecosystem with multi-portal routing, K-Means clustering, and real-time messaging.',
   },
-  {
-    year: '2026',
-    label: 'Fine-tune epoch',
-    title: 'Platform Testing Intern — TheContextLab.ai',
-    meta: 'Apr 2026 — May 2026 · Remote',
-    detail: 'Installed and configured the Sapiency AI CLI, running end-to-end UX tests in an Agile workflow. Validated core scenario paths for the REVA and ADA agentic learning modules.',
-  },
 ]
 
 const BADGES = [
   { icon: '🏆', title: 'AGENTVERSE Winner', desc: '1st place — Department Hackathon, GCE Erode' },
+  { icon: '🎓', title: 'Academic Honors', desc: 'Maintained CGPA of 8.92 with clean academic standing' },
   { icon: '🥉', title: 'Code Quest — 3rd Place', desc: 'National level, Nandha Engineering College' },
   { icon: '🛡️', title: 'EXPLOIT-X CTF', desc: '8-hour CTF at KPR Institute, Coimbatore' },
   { icon: '🏅', title: 'Smart India Hackathon ×2', desc: 'College-level selection across two national cycles' },
   { icon: '🖥️', title: '24hr Hackathon', desc: 'Linux antivirus app at KPR, Coimbatore' },
   { icon: '📋', title: 'Smart Campus Coordinator', desc: 'Event coordinator for 8-hr hackathon, GCE Erode' },
+  { icon: '🧪', title: 'Beta Platform Tester', desc: 'Validated scenarios & CLI setup for Sapiency AI' },
 ]
 
 function Achievements() {
@@ -126,6 +121,56 @@ const CERTS = [
   { platform: 'Anthropic', name: 'ClaudeCode 101', date: '2025', id: 'AN-202', image: '/certificates/claudecode-101.png' },
 ]
 
+function CertCard({ cert, index, onClick }) {
+  const [imgError, setImgError] = useState(false)
+
+  return (
+    <motion.div
+      className="cert-card"
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.08 }}
+      whileHover={{ y: -4 }}
+      onClick={onClick}
+    >
+      <div className="cert-card-header">
+        <span className="cert-platform">{cert.platform}</span>
+        <span className="cert-status-dot" />
+      </div>
+
+      <div className="cert-card-preview-wrap">
+        {!imgError ? (
+          <img
+            src={cert.image}
+            alt={cert.name}
+            className="cert-card-image"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="cert-card-fallback-mini">
+            <div className="mini-cert-frame">
+              <span className="mini-cert-platform">{cert.platform}</span>
+              <span className="mini-cert-title">{cert.name}</span>
+              <span className="mini-cert-seal">✓</span>
+            </div>
+          </div>
+        )}
+        <div className="cert-card-hover-overlay">
+          <span className="overlay-decrypt-text">DECRYPT // VIEW LOG</span>
+        </div>
+      </div>
+
+      <h4 className="cert-name">{cert.name}</h4>
+
+      <div className="cert-card-footer">
+        <span className="cert-id">{cert.id}</span>
+        <span className="cert-status-text">verified ✓</span>
+      </div>
+    </motion.div>
+  )
+}
+
 function Certifications() {
   const [activeCert, setActiveCert] = useState(null)
 
@@ -134,26 +179,12 @@ function Certifications() {
       <p className="eyebrow">SAVED LOGS // CERTIFICATIONS</p>
       <div className="cert-grid">
         {CERTS.map((c, i) => (
-          <motion.div
+          <CertCard
             key={c.id}
-            className="cert-card"
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.08 }}
-            whileHover={{ y: -4, borderColor: 'var(--signal)' }}
+            cert={c}
+            index={i}
             onClick={() => setActiveCert(c)}
-          >
-            <div className="cert-card-header">
-              <span className="cert-platform">{c.platform}</span>
-              <span className="cert-status-dot" />
-            </div>
-            <h4 className="cert-name">{c.name}</h4>
-            <div className="cert-card-footer">
-              <span className="cert-id">{c.id}</span>
-              <span className="cert-status-text">verified ✓</span>
-            </div>
-          </motion.div>
+          />
         ))}
       </div>
 
@@ -218,13 +249,24 @@ function Certifications() {
 }
 
 export default function Experience() {
+  const containerRef = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 85%", "end 85%"]
+  })
+
+  const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1])
+
   return (
     <section id="research" className="experience section-wrap">
       <p className="eyebrow">RESEARCH // FINE-TUNING LOG</p>
       <h2 className="section-title">Training <span>Timeline</span></h2>
 
-      <div className="timeline">
-        <div className="timeline-track" />
+      <div ref={containerRef} className="timeline">
+        <motion.div 
+          className="timeline-track" 
+          style={{ scaleY, transformOrigin: 'top' }}
+        />
         {STEPS.map((s, i) => (
           <motion.div
             key={s.title}

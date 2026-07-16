@@ -15,6 +15,7 @@ export default function NeuralBackground() {
     let width, height
     let nodes = []
     let packets = []
+    let ripples = []
     const GLYPHS = ['∇θ', 'Σ', 'ReLU', 'σ(x)', '∂L', 'Wx+b', 'softmax', 'Q·Kᵀ', '⊕', 'λ']
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -31,7 +32,7 @@ export default function NeuralBackground() {
         vy: (Math.random() - 0.5) * 0.25,
         r: Math.random() * 1.6 + 0.6,
         pulse: Math.random() * Math.PI * 2,
-        glyph: Math.random() < 0.06 ? GLYPHS[Math.floor(Math.random() * GLYPHS.length)] : null,
+        glyph: Math.random() < 0.22 ? GLYPHS[Math.floor(Math.random() * GLYPHS.length)] : null,
       }))
       packets = Array.from({ length: width < 640 ? 5 : 10 }, spawnPacket)
     }
@@ -154,6 +155,32 @@ export default function NeuralBackground() {
         })
         packets = packets.filter((p) => p.x > -30 && p.x < width + 30)
         while (packets.length < (width < 640 ? 5 : 10)) packets.push(spawnPacket())
+
+        // update and render ripples (Option B)
+        ripples.forEach((r) => {
+          r.r += r.speed
+          r.opacity = (1 - r.r / r.maxR) * 0.5
+
+          ctx.strokeStyle = `rgba(${colors.line},${r.opacity})`
+          ctx.lineWidth = 1.2
+          ctx.beginPath()
+          ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2)
+          ctx.stroke()
+
+          // Push and pulse nearby nodes
+          nodes.forEach((n) => {
+            const dx = n.x - r.x
+            const dy = n.y - r.y
+            const dist = Math.sqrt(dx * dx + dy * dy)
+            if (Math.abs(dist - r.r) < 18 && dist > 10) {
+              n.pulse += 0.2
+              const pushFactor = (1 - r.r / r.maxR) * 0.65
+              n.x += (dx / dist) * pushFactor
+              n.y += (dy / dist) * pushFactor
+            }
+          })
+        })
+        ripples = ripples.filter((r) => r.r < r.maxR)
       }
 
       raf = requestAnimationFrame(step)
@@ -167,17 +194,31 @@ export default function NeuralBackground() {
       mouse.current.x = -9999
       mouse.current.y = -9999
     }
+    function onClick(e) {
+      if (prefersReduced) return
+      const rect = canvas.getBoundingClientRect()
+      ripples.push({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        r: 0,
+        maxR: Math.max(width, height) * 0.45,
+        speed: 5,
+        opacity: 0.6,
+      })
+    }
 
     resize()
     step()
     window.addEventListener('resize', resize)
     window.addEventListener('mousemove', onMove)
     window.addEventListener('mouseleave', onLeave)
+    window.addEventListener('click', onClick)
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseleave', onLeave)
+      window.removeEventListener('click', onClick)
     }
   }, [])
 

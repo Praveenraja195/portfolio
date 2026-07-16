@@ -6,6 +6,7 @@ const MODULES = [
   { id: 'model', label: 'MODEL' },
   { id: 'dataset', label: 'DATASET' },
   { id: 'projects', label: 'PROJECTS' },
+  { id: 'experience', label: 'EXPERIENCE' },
   { id: 'research', label: 'RESEARCH' },
   { id: 'contact', label: 'CONTACT' },
 ]
@@ -17,7 +18,7 @@ const THEMES = [
   { id: 'retro', name: 'Retro', dotColor: '#ea580c', glowColor: '#f97316' },
 ]
 
-export default function Navbar({ theme, setTheme }) {
+export default function Navbar({ theme, setTheme, soundOn, toggleSound }) {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('core')
 
@@ -74,6 +75,15 @@ export default function Navbar({ theme, setTheme }) {
               />
             ))}
           </div>
+
+          <button 
+            className={`nav-sound-btn ${soundOn ? 'is-active' : ''}`}
+            onClick={toggleSound}
+            title={soundOn ? "Mute Ambient Music & Sounds" : "Unmute Ambient Music & Sounds"}
+            aria-label="Toggle sound feedback"
+          >
+            {soundOn ? '🔊' : '🔇'}
+          </button>
 
           <button
             className="nav-burger"

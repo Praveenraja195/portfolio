@@ -56,9 +56,39 @@ const SKILL_ICONS = {
   n8n: 'n8n',
 }
 
+let skillsAudioCtx = null
+
 export default function SkillsNetwork() {
   const [active, setActive] = useState(null)
   const activeSkill = SKILLS.find((s) => s.id === active)
+
+  const playHoverTick = () => {
+    try {
+      if (localStorage.getItem('ui-sound') !== 'true') return
+      const AudioContext = window.AudioContext || window.webkitAudioContext
+      if (!AudioContext) return
+      
+      if (!skillsAudioCtx) {
+        skillsAudioCtx = new AudioContext()
+      }
+      
+      const ctx = skillsAudioCtx
+      if (ctx.state === 'suspended') {
+        ctx.resume()
+      }
+
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(600, ctx.currentTime)
+      gain.gain.setValueAtTime(0.004, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.02)
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start()
+      osc.stop(ctx.currentTime + 0.02)
+    } catch (e) {}
+  }
 
   return (
     <section id="dataset" className="skills section-wrap">
@@ -96,13 +126,13 @@ export default function SkillsNetwork() {
               key={s.id}
               transform={`translate(${s.x} ${s.y})`}
               className="skill-node-group"
-              onMouseEnter={() => setActive(s.id)}
+              onMouseEnter={() => { setActive(s.id); playHoverTick(); }}
               onMouseLeave={() => setActive(null)}
-              onClick={() => setActive(active === s.id ? null : s.id)}
+              onClick={() => { setActive(active === s.id ? null : s.id); playHoverTick(); }}
               tabIndex={0}
               role="button"
               aria-label={s.name}
-              onFocus={() => setActive(s.id)}
+              onFocus={() => { setActive(s.id); playHoverTick(); }}
             >
               <g className={`skill-float skill-float-${i % 5}`}>
                 <circle

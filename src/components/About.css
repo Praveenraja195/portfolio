@@ -14,27 +14,47 @@
   background: linear-gradient(180deg, var(--panel), var(--panel-2));
   border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 22px 24px;
+  overflow: hidden;
 }
 
-.spec-card-head {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--text);
+.spec-card-tabs {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 14px;
-  margin-bottom: 14px;
+  background: var(--panel);
   border-bottom: 1px solid var(--line);
 }
 
-.spec-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--confidence);
-  box-shadow: 0 0 8px var(--confidence);
+.spec-tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  border-right: 1px solid var(--line);
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.spec-tab-btn:last-child {
+  border-right: none;
+}
+
+.spec-tab-btn:hover {
+  color: var(--signal);
+  background: rgba(34, 211, 238, 0.04);
+}
+
+.spec-tab-btn.is-active {
+  color: var(--text);
+  background: var(--void);
+  font-weight: bold;
+  border-bottom: 2px solid var(--signal);
+}
+
+.spec-card-body {
+  padding: 22px 24px;
 }
 
 .spec-row {
@@ -48,7 +68,7 @@
 .spec-row:last-child { border-bottom: none; }
 
 .spec-row dt {
-  color: var(--text-faint);
+  color: var(--text-dim);
 }
 .spec-row dd {
   margin: 0;
@@ -88,7 +108,7 @@
 .terminal-title {
   margin-left: 8px;
   font-size: 0.7rem;
-  color: var(--text-faint);
+  color: var(--text-dim);
 }
 
 .terminal-body {
@@ -103,7 +123,7 @@
   margin-top: 6px;
 }
 .term-out {
-  color: var(--text-dim);
+  color: var(--text);
 }
 
 .term-cursor {
@@ -115,4 +135,133 @@
   .about-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.training-visualizer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metric-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.metric-dot.loss {
+  background: var(--signal);
+  box-shadow: 0 0 6px var(--signal);
+}
+.metric-dot.acc {
+  background: var(--purple-bright);
+  box-shadow: 0 0 6px var(--purple-bright);
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.metric-value {
+  font-size: 0.72rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.chart-container {
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  padding: 10px;
+  background: rgba(5, 3, 8, 0.2);
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart-text {
+  fill: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.retrain-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.retrain-btn {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--signal);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.retrain-btn:hover {
+  color: var(--text);
+  border-color: var(--signal);
+  background: rgba(34, 211, 238, 0.06);
+}
+
+.optimizer-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.selector-title {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.optimizer-btn {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.optimizer-btn:hover {
+  color: var(--signal);
+  border-color: var(--signal-dim);
+}
+
+.optimizer-btn.is-active {
+  color: var(--text);
+  border-color: var(--signal);
+  background: rgba(34, 211, 238, 0.08);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.15);
 }

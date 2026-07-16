@@ -1,0 +1,90 @@
+.scroll-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--signal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 99;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(34, 211, 238, 0.1);
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+  padding: 0;
+  outline: none;
+}
+
+.scroll-to-top:hover {
+  border-color: var(--signal);
+  color: var(--purple-bright);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.25);
+}
+
+.scroll-arrow {
+  font-size: 1.1rem;
+  font-weight: bold;
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+.scroll-to-top:hover .scroll-arrow {
+  transform: translateY(-2px);
+}
+
+.scroll-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--signal-dim), transparent 70%);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (max-width: 600px) {
+  .scroll-to-top {
+    bottom: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+  }
+  .scroll-arrow {
+    font-size: 0.95rem;
+  }
+  .scroll-tooltip {
+    display: none !important;
+  }
+}
+
+.scroll-tooltip {
+  position: absolute;
+  right: 56px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--signal);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(34, 211, 238, 0.05);
+}
+
+.scroll-to-top:hover .scroll-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}

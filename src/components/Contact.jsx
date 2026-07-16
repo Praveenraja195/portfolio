@@ -90,7 +90,77 @@ const INTERN_OUTPUT = [
 
 const FORMSPREE_FORM_ID = 'mpqvwazv' // Paste your Formspree Form ID here
 
-export default function Contact() {
+let globalAudioCtx = null
+let ambientNodes = null
+
+const startAmbientDrone = (ctx) => {
+  if (ambientNodes) return
+  try {
+    const osc1 = ctx.createOscillator()
+    const osc2 = ctx.createOscillator()
+    const osc3 = ctx.createOscillator()
+    const filter = ctx.createBiquadFilter()
+    const mainGain = ctx.createGain()
+
+    osc1.type = 'sawtooth'
+    osc1.frequency.setValueAtTime(65.41, ctx.currentTime) // C2
+    
+    osc2.type = 'triangle'
+    osc2.frequency.setValueAtTime(98.00, ctx.currentTime) // G2
+    
+    osc3.type = 'sawtooth'
+    osc3.frequency.setValueAtTime(130.81, ctx.currentTime) // C3
+
+    osc1.detune.setValueAtTime(-6, ctx.currentTime)
+    osc2.detune.setValueAtTime(0, ctx.currentTime)
+    osc3.detune.setValueAtTime(6, ctx.currentTime)
+
+    filter.type = 'lowpass'
+    filter.frequency.setValueAtTime(140, ctx.currentTime)
+    filter.Q.setValueAtTime(3, ctx.currentTime)
+
+    const lfo = ctx.createOscillator()
+    const lfoGain = ctx.createGain()
+    lfo.frequency.setValueAtTime(0.08, ctx.currentTime)
+    lfoGain.gain.setValueAtTime(50, ctx.currentTime)
+
+    lfo.connect(lfoGain)
+    lfoGain.connect(filter.frequency)
+
+    mainGain.gain.setValueAtTime(0, ctx.currentTime)
+    mainGain.gain.linearRampToValueAtTime(0.016, ctx.currentTime + 3.0)
+
+    osc1.connect(filter)
+    osc2.connect(filter)
+    osc3.connect(filter)
+    filter.connect(mainGain)
+    mainGain.connect(ctx.destination)
+
+    osc1.start()
+    osc2.start()
+    osc3.start()
+    lfo.start()
+
+    ambientNodes = { osc1, osc2, osc3, lfo, filter, mainGain, ctx }
+  } catch (e) {}
+}
+
+const stopAmbientDrone = () => {
+  if (!ambientNodes) return
+  const { osc1, osc2, osc3, lfo, mainGain, ctx } = ambientNodes
+  try {
+    mainGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.2)
+    setTimeout(() => {
+      osc1.stop()
+      osc2.stop()
+      osc3.stop()
+      lfo.stop()
+    }, 1300)
+  } catch (e) {}
+  ambientNodes = null
+}
+
+export default function Contact({ soundOn, toggleSound }) {
   const [history, setHistory] = useState([
     { type: 'out', text: 'AI terminal ready. Type "contact" to retrieve reach-out details, or use "help" for a full checklist.' },
   ])
@@ -99,8 +169,89 @@ export default function Contact() {
   const [formEmail, setFormEmail] = useState('')
   const [formMessage, setFormMessage] = useState('')
   const [formStatus, setFormStatus] = useState('idle') // 'idle' | 'sending' | 'success' | 'error'
+  const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef(null)
   const inputRef = useRef(null)
+
+  const playAudioSFX = (type) => {
+    try {
+      if (localStorage.getItem('ui-sound') !== 'true') return
+      const AudioContext = window.AudioContext || window.webkitAudioContext
+      if (!AudioContext) return
+      
+      if (!globalAudioCtx) {
+        globalAudioCtx = new AudioContext()
+      }
+      
+      const ctx = globalAudioCtx
+      if (ctx.state === 'suspended') {
+        ctx.resume()
+      }
+      
+      if (type === 'type') {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'triangle'
+        osc.frequency.setValueAtTime(800 + Math.random() * 200, ctx.currentTime)
+        gain.gain.setValueAtTime(0.012, ctx.currentTime)
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05)
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start()
+        osc.stop(ctx.currentTime + 0.05)
+      } else if (type === 'click') {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(1000, ctx.currentTime)
+        osc.frequency.setValueAtTime(1400, ctx.currentTime + 0.03)
+        gain.gain.setValueAtTime(0.02, ctx.currentTime)
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08)
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start()
+        osc.stop(ctx.currentTime + 0.08)
+      } else if (type === 'hover') {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(550, ctx.currentTime)
+        gain.gain.setValueAtTime(0.004, ctx.currentTime)
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.02)
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start()
+        osc.stop(ctx.currentTime + 0.02)
+      }
+    } catch (e) {
+      console.warn("Audio SFX error:", e)
+    }
+  }
+
+  const handleQuickCommandClick = (cmd) => {
+    if (isTyping) return
+    setIsTyping(true)
+    playAudioSFX('click')
+    setInput('')
+    
+    let currentText = ''
+    let charIndex = 0
+    
+    const interval = setInterval(() => {
+      if (charIndex < cmd.length) {
+        currentText += cmd[charIndex]
+        setInput(currentText)
+        playAudioSFX('type')
+        charIndex++
+      } else {
+        clearInterval(interval)
+        setTimeout(() => {
+          runCommand(cmd)
+          setIsTyping(false)
+        }, 150)
+      }
+    }, 45)
+  }
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -183,10 +334,19 @@ export default function Contact() {
 
       <div className="contact-grid">
         <div className="contact-terminal-wrap">
-          <div className="contact-terminal" onClick={() => inputRef.current?.focus()}>
+          <div className="contact-terminal" onClick={() => !isTyping && inputRef.current?.focus()}>
             <div className="terminal-bar">
-              <span className="dot red" /><span className="dot yellow" /><span className="dot green" />
-              <span className="terminal-title">connection.sh</span>
+              <div className="bar-left">
+                <span className="dot red" /><span className="dot yellow" /><span className="dot green" />
+                <span className="terminal-title">connection.sh</span>
+              </div>
+              <button 
+                className="sound-toggle-btn" 
+                onClick={(e) => { e.stopPropagation(); toggleSound(); }}
+                title="Toggle Audio Feedback"
+              >
+                {soundOn ? '🔊 SOUND: ON' : '🔇 SOUND: OFF'}
+              </button>
             </div>
             <div className="contact-body" ref={scrollRef}>
               {history.map((h, i) => (
@@ -197,9 +357,18 @@ export default function Contact() {
                 <input
                   ref={inputRef}
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') runCommand(input) }}
-                  placeholder="type a command..."
+                  onChange={(e) => {
+                    setInput(e.target.value)
+                    playAudioSFX('type')
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      playAudioSFX('click')
+                      runCommand(input)
+                    }
+                  }}
+                  placeholder={isTyping ? "simulating entry..." : "type a command..."}
+                  disabled={isTyping}
                   aria-label="Terminal command input"
                   autoComplete="off"
                   spellCheck="false"
@@ -208,7 +377,14 @@ export default function Contact() {
             </div>
             <div className="contact-quick">
               {['contact', 'skills', 'projects', 'certs', 'intern', 'about', 'timeline', 'clear'].map((c) => (
-                <button key={c} onClick={() => runCommand(c)}>{c}</button>
+                <button 
+                  key={c} 
+                  onClick={() => handleQuickCommandClick(c)}
+                  onMouseEnter={() => playAudioSFX('hover')}
+                  disabled={isTyping}
+                >
+                  {c}
+                </button>
               ))}
             </div>
           </div>
