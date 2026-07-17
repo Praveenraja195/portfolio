@@ -88,17 +88,21 @@ export default function NeuralBackground() {
     function step() {
       ctx.clearRect(0, 0, width, height)
       const colors = getCanvasColors()
+      const intensity = window.audioIntensity || 0
 
-      // synapse lines
+      // synapse lines (Highly connected by default!)
+      const maxDist = 180 + intensity * 25 // reaches up to 205px on heavy beats
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const a = nodes[i], b = nodes[j]
           const dx = a.x - b.x, dy = a.y - b.y
           const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 130) {
-            const op = (1 - dist / 130) * 0.16
+          if (dist < maxDist) {
+            const baseOp = (1 - dist / maxDist)
+            // Brighter lines by default (0.42 baseline) + even brighter on beat (up to 0.80)
+            const op = baseOp * (0.42 + intensity * 0.38) 
             ctx.strokeStyle = `rgba(${colors.line},${op})`
-            ctx.lineWidth = 0.6
+            ctx.lineWidth = 0.95 + intensity * 1.45 // Thicker lines by default + beat growth
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)
             ctx.lineTo(b.x, b.y)
@@ -110,9 +114,11 @@ export default function NeuralBackground() {
       // nodes
       nodes.forEach((n) => {
         if (!prefersReduced) {
-          n.x += n.vx
-          n.y += n.vy
-          n.pulse += 0.02
+          // Drifts 1.6x faster by default, accelerating up to 5x on beats
+          const speedMult = 1.6 + intensity * 3.4
+          n.x += n.vx * speedMult
+          n.y += n.vy * speedMult
+          n.pulse += 0.025 + intensity * 0.1
 
           const dx = n.x - mouse.current.x
           const dy = n.y - mouse.current.y
@@ -128,14 +134,15 @@ export default function NeuralBackground() {
           if (n.y > height + 20) n.y = -20
         }
 
-        const glow = 1.4 + Math.sin(n.pulse) * 0.6
+        const glow = 1.5 + Math.sin(n.pulse) * 0.5 + intensity * 1.3 // nodes swell on beat
         ctx.beginPath()
         ctx.arc(n.x, n.y, n.r * glow, 0, Math.PI * 2)
         ctx.fillStyle = colors.node
         ctx.fill()
 
         if (n.glyph) {
-          ctx.font = '9px IBM Plex Mono, monospace'
+          const fontSize = 9.5 + intensity * 6.5 // glyphs swell on beat
+          ctx.font = `${fontSize}px IBM Plex Mono, monospace`
           ctx.fillStyle = colors.glyph
           ctx.fillText(n.glyph, n.x + 6, n.y - 6)
         }
@@ -143,13 +150,26 @@ export default function NeuralBackground() {
 
       // data packets
       if (!prefersReduced) {
+        // Auto-spawn shockwave ripples on heavy beats
+        if (intensity > 0.65 && Math.random() < 0.02 && ripples.length < 3) {
+          ripples.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            r: 0,
+            maxR: Math.max(width, height) * 0.28,
+            speed: 5 + intensity * 5,
+            opacity: 0.6,
+          })
+        }
+
         packets.forEach((p) => {
-          p.x += p.vx
+          // Speed up packets on beat
+          p.x += p.vx * (1.6 + intensity * 3.0)
           ctx.beginPath()
           ctx.arc(p.x, p.y, 2, 0, Math.PI * 2)
           ctx.fillStyle = `rgba(${p.color},0.9)`
           ctx.shadowColor = `rgba(${p.color},0.9)`
-          ctx.shadowBlur = 6
+          ctx.shadowBlur = 6 + intensity * 12 // extra glowing blur on beat
           ctx.fill()
           ctx.shadowBlur = 0
         })
@@ -182,6 +202,8 @@ export default function NeuralBackground() {
         })
         ripples = ripples.filter((r) => r.r < r.maxR)
       }
+
+
 
       raf = requestAnimationFrame(step)
     }

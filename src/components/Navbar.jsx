@@ -21,6 +21,28 @@ const THEMES = [
 export default function Navbar({ theme, setTheme, soundOn, toggleSound }) {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('core')
+  const [showTooltip, setShowTooltip] = useState(false)
+
+  useEffect(() => {
+    if (!soundOn) {
+      const timer = setTimeout(() => {
+        setShowTooltip(true)
+      }, 2500)
+      return () => clearTimeout(timer)
+    } else {
+      setShowTooltip(false)
+    }
+  }, [soundOn])
+
+  const handleToggle = () => {
+    toggleSound()
+    setShowTooltip(false)
+  }
+
+  const dismissTooltip = (e) => {
+    e.stopPropagation()
+    setShowTooltip(false)
+  }
 
   useEffect(() => {
     const sections = MODULES.map((m) => document.getElementById(m.id)).filter(Boolean)
@@ -76,14 +98,22 @@ export default function Navbar({ theme, setTheme, soundOn, toggleSound }) {
             ))}
           </div>
 
-          <button 
-            className={`nav-sound-btn ${soundOn ? 'is-active' : ''}`}
-            onClick={toggleSound}
-            title={soundOn ? "Mute Ambient Music & Sounds" : "Unmute Ambient Music & Sounds"}
-            aria-label="Toggle sound feedback"
-          >
-            {soundOn ? '🔊' : '🔇'}
-          </button>
+          <div className="nav-sound-container">
+            <button 
+              className={`nav-sound-btn ${soundOn ? 'is-active' : ''}`}
+              onClick={handleToggle}
+              title={soundOn ? "Mute Ambient Music & Sounds" : "Unmute Ambient Music & Sounds"}
+              aria-label="Toggle sound feedback"
+            >
+              {soundOn ? '🔊' : '🔇'}
+            </button>
+            {showTooltip && (
+              <div className="nav-sound-tooltip">
+                <span>🎧 Turn on music for a better experience!</span>
+                <button className="nav-sound-tooltip-close" onClick={dismissTooltip} aria-label="Close tooltip">×</button>
+              </div>
+            )}
+          </div>
 
           <button
             className="nav-burger"

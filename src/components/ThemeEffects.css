@@ -1,0 +1,78 @@
+/* CRT Terminal Screen Simulation overlay */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999999; /* Overlay scanlines on top of all text */
+  background: linear-gradient(
+    rgba(13, 8, 5, 0) 50%, 
+    rgba(0, 0, 0, 0.18) 50%
+  );
+  background-size: 100% 4px;
+  transition: opacity 0.3s ease;
+}
+
+/* CRT Vignette shadow representing round physical glass screen tube */
+.crt-vignette {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000000; /* Outer edge shade */
+  background: radial-gradient(
+    circle at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.38) 120%
+  );
+  transition: opacity 0.3s ease;
+}
+
+/* Phosphor glow intensity flicker container */
+.crt-flicker {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999998;
+  background: rgba(249, 115, 22, 0.015); /* matching retro orange color */
+  animation: retroScreenFlicker 0.12s infinite;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes retroScreenFlicker {
+  0% { opacity: 0.94; }
+  50% { opacity: 1.0; }
+  100% { opacity: 0.92; }
+}
+
+/* Disable CRT overlay when modal is open or when hover is on cert previews / image carousels */
+body.modal-open .crt-overlay,
+body.modal-open .crt-vignette,
+body.modal-open .crt-flicker,
+body:has(.carousel:hover) .crt-overlay,
+body:has(.carousel:hover) .crt-vignette,
+body:has(.carousel:hover) .crt-flicker,
+body:has(.work-cert-card-preview-wrap:hover) .crt-overlay,
+body:has(.work-cert-card-preview-wrap:hover) .crt-vignette,
+body:has(.work-cert-card-preview-wrap:hover) .crt-flicker,
+body:has(.hero-image-container:hover) .crt-overlay,
+body:has(.hero-image-container:hover) .crt-vignette,
+body:has(.hero-image-container:hover) .crt-flicker {
+  opacity: 0 !important;
+}
+
+/* Canvas styling for Matrix Rain falling code */
+.matrix-rain-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1; /* Positioned between background grid (0) and content (2) */
+  opacity: 0.14; /* Reduced opacity to prevent visual clutter and maintain high text readability */
+}
+

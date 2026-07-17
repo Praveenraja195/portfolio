@@ -5,7 +5,7 @@ export default function Hero() {
   return (
     <section id="core" className="hero section-wrap">
       <div className="hero-content-wrapper">
-        <div className="hero-image-wrapper" style={{ position: 'relative' }}>
+        <div className="hero-image-wrapper" style={{ position: 'relative', zIndex: 1000001 }}>
           <motion.div
             className="hero-image-container"
             initial={{ opacity: 0, x: -20 }}

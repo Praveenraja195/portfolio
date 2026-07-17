@@ -1,11 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import TiltCard from './TiltCard.jsx'
 import './WorkExperience.css'
 
 export default function WorkExperience() {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [cardImageError, setCardImageError] = useState(false)
+
+  useEffect(() => {
+    if (lightboxOpen) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+    return () => document.body.classList.remove('modal-open')
+  }, [lightboxOpen])
 
   const tasks = [
     'Installed, configured, and tested the Sapiency CLI end to end.',
@@ -20,7 +30,7 @@ export default function WorkExperience() {
 
       <div className="work-grid">
         {/* Experience Details Card */}
-        <motion.div
+        <TiltCard
           className="work-card"
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -62,10 +72,10 @@ export default function WorkExperience() {
               ))}
             </ul>
           </div>
-        </motion.div>
+        </TiltCard>
 
         {/* Certificate Card */}
-        <motion.div
+        <TiltCard
           className="work-cert-card"
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -106,7 +116,7 @@ export default function WorkExperience() {
               <span className="cert-status-tag">SECURE LOG ✓</span>
             </div>
           </div>
-        </motion.div>
+        </TiltCard>
       </div>
 
       {/* Lightbox Modal */}

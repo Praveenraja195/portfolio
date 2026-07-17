@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import BootSequence from './components/BootSequence.jsx'
 import NeuralBackground from './components/NeuralBackground.jsx'
 import Navbar from './components/Navbar.jsx'
@@ -13,75 +13,31 @@ import Footer from './components/Footer.jsx'
 import DevMode from './components/DevMode.jsx'
 import useDevMode from './hooks/useDevMode.js'
 import ScrollToTop from './components/ScrollToTop.jsx'
+import ThemeEffects from './components/ThemeEffects.jsx'
 
 let globalAudioCtx = null
-let ambientNodes = null
+let audioSource = null
+let analyserNode = null
 
-const startAmbientDrone = (ctx) => {
-  if (ambientNodes) return
+const initAudioAnalysis = (audioEl) => {
   try {
-    const osc1 = ctx.createOscillator()
-    const osc2 = ctx.createOscillator()
-    const osc3 = ctx.createOscillator()
-    const filter = ctx.createBiquadFilter()
-    const mainGain = ctx.createGain()
-
-    osc1.type = 'sawtooth'
-    osc1.frequency.setValueAtTime(65.41, ctx.currentTime) // C2
-    
-    osc2.type = 'triangle'
-    osc2.frequency.setValueAtTime(98.00, ctx.currentTime) // G2
-    
-    osc3.type = 'sawtooth'
-    osc3.frequency.setValueAtTime(130.81, ctx.currentTime) // C3
-
-    osc1.detune.setValueAtTime(-6, ctx.currentTime)
-    osc2.detune.setValueAtTime(0, ctx.currentTime)
-    osc3.detune.setValueAtTime(6, ctx.currentTime)
-
-    filter.type = 'lowpass'
-    filter.frequency.setValueAtTime(140, ctx.currentTime)
-    filter.Q.setValueAtTime(3, ctx.currentTime)
-
-    const lfo = ctx.createOscillator()
-    const lfoGain = ctx.createGain()
-    lfo.frequency.setValueAtTime(0.08, ctx.currentTime)
-    lfoGain.gain.setValueAtTime(50, ctx.currentTime)
-
-    lfo.connect(lfoGain)
-    lfoGain.connect(filter.frequency)
-
-    mainGain.gain.setValueAtTime(0, ctx.currentTime)
-    mainGain.gain.linearRampToValueAtTime(0.016, ctx.currentTime + 3.0)
-
-    osc1.connect(filter)
-    osc2.connect(filter)
-    osc3.connect(filter)
-    filter.connect(mainGain)
-    mainGain.connect(ctx.destination)
-
-    osc1.start()
-    osc2.start()
-    osc3.start()
-    lfo.start()
-
-    ambientNodes = { osc1, osc2, osc3, lfo, filter, mainGain, ctx }
-  } catch (e) {}
-}
-
-const stopAmbientDrone = () => {
-  if (!ambientNodes) return
-  const { osc1, osc2, osc3, lfo, mainGain, ctx } = ambientNodes
-  try {
-    mainGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.2)
-    setTimeout(() => {
-      osc1.stop()
-      osc2.stop()
-      osc3.stop()
-      lfo.stop()
-    }, 1300)
-  } catch (e) {}
-  ambientNodes = null
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    if (!globalAudioCtx) {
+      globalAudioCtx = new AudioContext()
+    }
+    if (globalAudioCtx.state === 'suspended') {
+      globalAudioCtx.resume()
+    }
+    if (!audioSource && audioEl) {
+      audioSource = globalAudioCtx.createMediaElementSource(audioEl)
+      analyserNode = globalAudioCtx.createAnalyser()
+      analyserNode.fftSize = 64
+      audioSource.connect(analyserNode)
+      analyserNode.connect(globalAudioCtx.destination)
+    }
+  } catch (e) {
+    console.warn("Failed to initialize Web Audio Analyser:", e)
+  }
 }
 
 export default function App() {
@@ -89,6 +45,7 @@ export default function App() {
   const [devMode, setDevMode] = useDevMode()
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'void')
   const [soundOn, setSoundOn] = useState(() => localStorage.getItem('ui-sound') === 'true')
+  const audioRef = useRef(null)
 
   useEffect(() => {
     // Sync class theme on body
@@ -124,38 +81,66 @@ export default function App() {
         osc.start()
         osc.stop(ctx.currentTime + 0.06)
 
-        startAmbientDrone(ctx)
-      } else {
-        stopAmbientDrone()
+        initAudioAnalysis(audioRef.current)
       }
     } catch (e) {}
   }
 
+  // Handle Play/Pause when soundOn toggles
   useEffect(() => {
-    function initAmbient() {
-      if (localStorage.getItem('ui-sound') === 'true') {
-        try {
-          const AudioContext = window.AudioContext || window.webkitAudioContext
-          if (!globalAudioCtx) {
-            globalAudioCtx = new AudioContext()
-          }
-          if (globalAudioCtx.state === 'suspended') {
-            globalAudioCtx.resume()
-          }
-          startAmbientDrone(globalAudioCtx)
-        } catch (e) {}
-      }
-      window.removeEventListener('click', initAmbient)
-    }
-
+    if (!audioRef.current) return
     if (soundOn) {
-      window.addEventListener('click', initAmbient)
+      initAudioAnalysis(audioRef.current)
+      audioRef.current.play().catch(err => {
+        console.warn("Audio autoplay blocked by browser, resetting sound state to off.", err)
+        setSoundOn(false)
+        localStorage.setItem('ui-sound', 'false')
+      })
+    } else {
+      audioRef.current.pause()
     }
-    return () => window.removeEventListener('click', initAmbient)
+  }, [soundOn])
+
+  // Connect Analyser frequency updates to window.audioIntensity and window.audioFreqData for visual sync
+  useEffect(() => {
+    let rafId
+    let dataArray = null
+    
+    const updateIntensity = () => {
+      if (soundOn && analyserNode) {
+        if (!dataArray) {
+          dataArray = new Uint8Array(analyserNode.frequencyBinCount)
+        }
+        analyserNode.getByteFrequencyData(dataArray)
+        window.audioFreqData = dataArray
+        
+        let sum = 0
+        for (let i = 0; i < dataArray.length; i++) {
+          sum += dataArray[i]
+        }
+        const avg = sum / dataArray.length
+        
+        // Boost/normalize average volume for snappier responses (generally stays below 150/255)
+        window.audioIntensity = Math.min(1.0, avg / 135)
+      } else {
+        window.audioIntensity = 0
+        window.audioFreqData = null
+      }
+      rafId = requestAnimationFrame(updateIntensity)
+    }
+    
+    updateIntensity()
+    
+    return () => {
+      cancelAnimationFrame(rafId)
+      window.audioIntensity = 0
+      window.audioFreqData = null
+    }
   }, [soundOn])
 
   return (
     <>
+      <ThemeEffects theme={theme} key={theme} />
       {!booted && <BootSequence onDone={() => setBooted(true)} />}
       <NeuralBackground />
       {booted && (
@@ -175,6 +160,9 @@ export default function App() {
         </>
       )}
       <DevMode active={devMode} onClose={() => setDevMode(false)} />
+      
+      {/* Background MP3 Music File */}
+      <audio ref={audioRef} src="/background-music.mp3" loop />
     </>
   )
 }

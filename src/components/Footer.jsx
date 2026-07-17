@@ -27,6 +27,9 @@ export default function Footer() {
       </div>
       <p className="footer-details">praveenraja-v2 // build {new Date().getFullYear()} — press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> for developer mode</p>
       <p className="footer-attribution">developed by praveenraja</p>
+      <p className="footer-quote">
+        "If you change the way you look at things, the things you look at will change" — Wayne Dyer
+      </p>
     </footer>
   )
 }

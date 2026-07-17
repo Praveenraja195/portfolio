@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import TiltCard from './TiltCard.jsx'
 import './About.css'
 
 const SPEC = [
@@ -38,7 +39,7 @@ export default function About() {
       <h2 className="section-title">Model <span>Card</span></h2>
 
       <div className="about-grid">
-        <motion.div
+        <TiltCard
           className="spec-card"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -92,7 +93,7 @@ export default function About() {
               />
             )}
           </div>
-        </motion.div>
+        </TiltCard>
 
         <Terminal />
       </div>

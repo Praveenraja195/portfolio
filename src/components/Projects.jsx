@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import TiltCard from './TiltCard.jsx'
 import './Projects.css'
+
 
 const PROJECTS = [
   {
@@ -169,7 +171,7 @@ export default function Projects() {
 
 function ProjectCard({ project, open, onToggle }) {
   return (
-    <motion.div className={`checkpoint ${open ? 'is-open' : ''}`} layout>
+    <TiltCard className={`checkpoint ${open ? 'is-open' : ''}`} layout>
       <button className="checkpoint-head" onClick={onToggle}>
         <div>
           <p className="checkpoint-file">{project.checkpoint}</p>
@@ -230,7 +232,7 @@ function ProjectCard({ project, open, onToggle }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </TiltCard>
   )
 }
 

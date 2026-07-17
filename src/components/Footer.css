@@ -57,3 +57,16 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
+.footer-quote {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+  font-style: italic;
+  opacity: 0.75;
+  max-width: 480px;
+  line-height: 1.4;
+  margin-top: 6px;
+}
